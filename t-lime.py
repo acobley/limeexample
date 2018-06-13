@@ -33,7 +33,7 @@ init_fn = slim.assign_from_checkpoint_fn(
 init_fn(session)
 def predict_fn(images):
         return session.run(probabilities, feed_dict={processed_images: images})
-images = transform_img_fn(['red_car_photo_andy_cobley.jpg'])
+images = transform_img_fn(['IMG_6065.JPG'])
 # I'm dividing by 2 and adding 0.5 because of how this Inception represents images
 plt.imshow(images[0] / 2 + 0.5)
 preds = predict_fn(images)
@@ -48,5 +48,5 @@ tmp = time.time()
 explanation = explainer.explain_instance(image, predict_fn, top_labels=5, hide_color=0, num_samples=1000)
 print time.time() - tmp
 from skimage.segmentation import mark_boundaries
-temp, mask = explanation.get_image_and_mask(512, positive_only=True, num_features=5, hide_rest=True)
+temp, mask = explanation.get_image_and_mask(582, positive_only=False, num_features=10, hide_rest=False)
 plt.imsave('result.png',mark_boundaries(temp / 2 + 0.5, mask))
