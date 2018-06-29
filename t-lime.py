@@ -33,11 +33,11 @@ init_fn = slim.assign_from_checkpoint_fn(
 init_fn(session)
 def predict_fn(images):
         return session.run(probabilities, feed_dict={processed_images: images})
-images = transform_img_fn(['IMG_6065.JPG'])
+images = transform_img_fn(['red_car_photo_andy_cobley.jpg'])
 # I'm dividing by 2 and adding 0.5 because of how this Inception represents images
 plt.imshow(images[0] / 2 + 0.5)
 preds = predict_fn(images)
-for x in preds.argsort()[0][-5:]:
+for x in preds.argsort()[0][-10:]:
         print x, names[x], preds[0,x]
 image = images[0]
 from lime import lime_image
