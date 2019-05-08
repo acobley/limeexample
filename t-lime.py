@@ -4,7 +4,7 @@ import tensorflow as tf
 import Tkinter as tk
 slim = tf.contrib.slim
 import sys
-sys.path.append('/notebooks/tf-models/slim')
+sys.path.append('/notebooks/models/research/slim/')
 import matplotlib.pyplot as plt
 import numpy as np
 from nets import inception
@@ -26,20 +26,24 @@ with slim.arg_scope(inception.inception_v3_arg_scope()):
         logits, _ = inception.inception_v3(processed_images, num_classes=1001, is_training=False)
 probabilities = tf.nn.softmax(logits)
 
-checkpoints_dir = '/notebooks/tf-models/slim/pretrained'
+checkpoints_dir = '/notebooks/models/slim/pretrained'
 init_fn = slim.assign_from_checkpoint_fn(
         os.path.join(checkpoints_dir, 'inception_v3.ckpt'),
         slim.get_model_variables('InceptionV3'))
 init_fn(session)
 def predict_fn(images):
         return session.run(probabilities, feed_dict={processed_images: images})
-images = transform_img_fn(['red_car_photo_andy_cobley.jpg'])
+images = transform_img_fn(['image.jpg'])
 # I'm dividing by 2 and adding 0.5 because of how this Inception represents images
 plt.imshow(images[0] / 2 + 0.5)
 preds = predict_fn(images)
 for x in preds.argsort()[0][-10:]:
         print x, names[x], preds[0,x]
 image = images[0]
+
+
+
+
 from lime import lime_image
 import time
 explainer = lime_image.LimeImageExplainer()
@@ -48,5 +52,5 @@ tmp = time.time()
 explanation = explainer.explain_instance(image, predict_fn, top_labels=5, hide_color=0, num_samples=1000)
 print time.time() - tmp
 from skimage.segmentation import mark_boundaries
-temp, mask = explanation.get_image_and_mask(582, positive_only=False, num_features=10, hide_rest=False)
+temp, mask = explanation.get_image_and_mask(838, positive_only=False, num_features=10, hide_rest=False)
 plt.imsave('result.png',mark_boundaries(temp / 2 + 0.5, mask))

@@ -1,0 +1,2 @@
+docker cp ./wolfosn.jpg inceptionlime:/notebooks/limeexample
+docker cp inceptionlime:/notebooks/limeexample/result.png .
